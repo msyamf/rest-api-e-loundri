@@ -65,9 +65,6 @@ $app->group('/api', function(\Slim\App $app) {
     $app->get('/cek-pengguna',function(Request $request, Response $response, array $args) {
        $data = $request->getAttribute('token');
        $response->withStatus(401);
-        //return $this->response->withJson(['status'=>'berhasil','data_pengguna' => $data]);
-
-
         $sql = "SELECT * FROM pengguna WHERE nama_pengguna= :nama_pengguna";
     try
     { 
@@ -77,9 +74,8 @@ $app->group('/api', function(\Slim\App $app) {
         $user = $sth->fetchObject();
         // verify email address.
         if(!$user) {
-            return $this->response->withJson(['status'=>'gagal','proses' => false, 'pesan' => 'penguna tidak terdaftar']);  
+            return $this->response->withJson(['status'=>'gagal','proses' => false, 'pesan' => 'penguna tidak falid']);  
         }
-      
         return $this->response->withJson(['status'=>'berhasil','data_pengguna' => $data]);
     }
     catch(PDOException $e)
