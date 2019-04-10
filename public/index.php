@@ -27,6 +27,8 @@ require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
 
 require __DIR__ . '/../src/routes/pengguna.php';
+require __DIR__ . '/../src/routes/master_harga.php';
+require __DIR__ . '/../src/routes/ticket.php';
 
 // Run app
 $app->run();

@@ -4,11 +4,13 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use \Firebase\JWT\JWT;
+use Tuupola\Middleware\CorsMiddleware;
 
 
 $app->post('/masuk', function (Request $request, Response $response, array $args) {
     $input = $request->getParsedBody();
     $sql = "SELECT * FROM pengguna WHERE nama_pengguna= :nama_pengguna";
+    //$reponse->withAddedHeader('Access-Control-Allow-Origin', '*');
     try
     { 
         $sth = $this->db->prepare($sql);
@@ -25,6 +27,7 @@ $app->post('/masuk', function (Request $request, Response $response, array $args
         }
         $settings = $this->get('settings'); // get settings array.
         $token = JWT::encode($pengguna, $settings['jwt']['secret'], "HS256");
+        //$this->reponse->withAddedHeader('Access-Control-Allow-Origin', '*');
         return $this->response->withJson(['status'=>'berhasil','proses' => true,'token' => $token]);
     }
     catch(PDOException $e)
@@ -62,7 +65,7 @@ $app->post('/daftar', function (Request $request, Response $response, array $arg
 });
 
 $app->group('/api', function(\Slim\App $app) {
-    $app->get('/cek-pengguna',function(Request $request, Response $response, array $args) {
+    $app->post('/cek-pengguna',function(Request $request, Response $response, array $args) {
        $data = $request->getAttribute('token');
        $response->withStatus(401);
         $sql = "SELECT * FROM pengguna WHERE nama_pengguna= :nama_pengguna";
@@ -72,7 +75,7 @@ $app->group('/api', function(\Slim\App $app) {
         $sth->bindParam("nama_pengguna", $data['nama_pengguna']);
         $sth->execute();
         $user = $sth->fetchObject();
-        // verify email address.
+        // verify nama.
         if(!$user) {
             return $this->response->withJson(['status'=>'gagal','proses' => false, 'pesan' => 'penguna tidak falid']);  
         }
