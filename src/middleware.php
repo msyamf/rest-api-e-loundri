@@ -3,7 +3,7 @@
 
 // e.g: $app->add(new \Slim\Csrf\Guard);
 $app->add(new \Tuupola\Middleware\JwtAuthentication([
-    "path" => ["/api","/api/harga"], /* or ["/api", "/admin"] */
+    "path" => ["/transaksi","/pengguna","/ticket","/m-harga"], /* or ["/api", "/admin"] */
     "attribute" => "token",
     "secret" => "supersecretkeyyoushouldnoittogithub",
     "algorithm" => ["HS256"],
@@ -20,7 +20,7 @@ $app->add(new \Tuupola\Middleware\JwtAuthentication([
 $app->add(new Tuupola\Middleware\CorsMiddleware([
     "origin" => ["*"],
     "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    "headers.allow" => [],
+    "headers.allow" => ['Authorization','Content-Type'],
     "headers.expose" => [],
     "credentials" => false,
     "cache" => 0,

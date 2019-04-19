@@ -4,7 +4,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use \Firebase\JWT\JWT;
 
-$app->group('/api/m-harga', function(\Slim\App $app) {
+$app->group('/m-harga', function(\Slim\App $app) {
     $app->post('/tambah',function(Request $request, Response $response, array $args) {
        $input = $request->getParsedBody();
        $data = $request->getAttribute('token');

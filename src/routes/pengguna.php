@@ -44,7 +44,6 @@ $app->post('/daftar', function (Request $request, Response $response, array $arg
     { 
         $pwd = password_hash($input['password'],PASSWORD_DEFAULT);
         $sth = $this->db->prepare($sql);
-
         $sth->bindParam("nama_pengguna", $input['nama_pengguna']);
         $sth->bindParam("password", $pwd);
         $sth->bindParam("nama", $input['nama']);
@@ -59,33 +58,99 @@ $app->post('/daftar', function (Request $request, Response $response, array $arg
     {
         return $this->response->withJson(['status'=>'gagal','proses' => false,'pesan' => $e->getMessage(),'input' => $input]);
     }
-   
-   
- 
 });
 
-$app->group('/api', function(\Slim\App $app) {
-    $app->post('/cek-pengguna',function(Request $request, Response $response, array $args) {
-       $data = $request->getAttribute('token');
-       $response->withStatus(401);
+$app->group('/pengguna', function(\Slim\App $app) {
+    $app->post('/cek',function(Request $request, Response $response, array $args) {
+        $data = $request->getAttribute('token');
+        $response->withStatus(401);
         $sql = "SELECT * FROM pengguna WHERE nama_pengguna= :nama_pengguna";
-    try
-    { 
-        $sth = $this->db->prepare($sql);
-        $sth->bindParam("nama_pengguna", $data['nama_pengguna']);
-        $sth->execute();
-        $user = $sth->fetchObject();
-        // verify nama.
-        if(!$user) {
-            return $this->response->withJson(['status'=>'gagal','proses' => false, 'pesan' => 'penguna tidak falid']);  
+        try
+        { 
+            $sth = $this->db->prepare($sql);
+            $sth->bindParam("nama_pengguna", $data['nama_pengguna']);
+            $sth->execute();
+            $user = $sth->fetchObject();
+            // verify nama.
+            if(!$user) {
+                return $this->response->withJson(['status'=>'gagal','proses' => false, 'pesan' => 'penguna tidak falid']);  
+            }
+            return $this->response->withJson(['status'=>'berhasil','data_pengguna' => $data]);
         }
-        return $this->response->withJson(['status'=>'berhasil','data_pengguna' => $data]);
-    }
-    catch(PDOException $e)
-    {
-        return $this->response->withJson(['status'=>'gagal','pesan' => $e->getMessage()]);
-    }
+        catch(PDOException $e)
+        {
+            return $this->response->withJson(['status'=>'gagal','pesan' => $e->getMessage()]);
+        }
+    });
 
+    $app->post('/ubah', function (Request $request, Response $response, array $args) {
+        $input = $request->getParsedBody();
+
+        if(!$input['id'] || !$input) {
+            return $this->response->withJson(['status'=>'gagal','proses' => false, 'pesan' => 'Bad Request'])->withStatus(400);  
+        }
+
+        $sql = "UPDATE `pengguna` SET `nama`=:nama, `nama_pengguna`=:nama_pengguna,`level`=:level, `tanggal_diperbarui`=now(), `telfon`=:telfon, `alamat`=:alamat WHERE `pengguna`.`id` = :id;";
+        try
+        { 
+           
+            $sth = $this->db->prepare($sql);
+            $sth->bindParam("nama_pengguna", $input['nama_pengguna']);
+            $sth->bindParam("id", $input['id']);
+            $sth->bindParam("nama", $input['nama']);
+            $sth->bindParam("level", $input['level']);
+            $sth->bindParam("telfon", $input['telfon']);
+            $sth->bindParam("alamat", $input['alamat']);
+            $sth->execute();
+            $settings = $this->get('settings'); // get settings array.
+            return $this->response->withJson(['status'=>'berhasil','proses' => true]);
+        }
+        catch(PDOException $e)
+        {
+            return $this->response->withJson(['status'=>'gagal','proses' => false,'pesan' => $e->getMessage(),'input' => $input]);
+        }
+    });
+
+    $app->post('/ubah-password', function (Request $request, Response $response, array $args) {
+        $input = $request->getParsedBody();
+        if(!$input['password']) {
+            //$response->withStatus(400);
+            return $this->response->withJson(['status'=>'gagal','proses' => false, 'pesan' => 'Bad Request'])->withStatus(400);  
+        }
+        $sql = "UPDATE `pengguna` SET `password`= :password WHERE `pengguna`.`id` = :id;";
+        try
+        { 
+            $pwd = password_hash($input['password'],PASSWORD_DEFAULT);
+            $sth = $this->db->prepare($sql);
+            $sth->bindParam("password",  $pwd);
+            $sth->bindParam("id",$input['id']);
+            $sth->execute();
+            $settings = $this->get('settings'); // get settings array.
+            return $this->response->withJson(['status'=>'berhasil','pwd'=>$pwd,'proses' => true]);
+        }
+        catch(PDOException $e)
+        {
+            return $this->response->withJson(['status'=>'gagal','proses' => false,'pesan' => $e->getMessage(),'input' => $input]);
+        }
+    });
+
+
+    $app->post('/list',function(Request $request, Response $response, array $args) {
+        $data = $request->getAttribute('token');
+        $response->withStatus(401);
+        $sql = "SELECT * FROM pengguna";
+        try
+        { 
+            $sth = $this->db->prepare($sql);
+            $sth->execute();
+            $user = $sth->fetchAll();
+          
+            return $this->response->withJson(['status'=>'berhasil','proses' => true,'data' => $user]);
+        }
+        catch(PDOException $e)
+        {
+            return $this->response->withJson(['status'=>'gagal','pesan' => $e->getMessage()]);
+        }
     });
    
 });

@@ -4,18 +4,25 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use \Firebase\JWT\JWT;
 
-$app->group('/api/ticket', function(\Slim\App $app) {
+$app->group('/transaksi', function(\Slim\App $app) {
     $app->post('/tambah',function(Request $request, Response $response, array $args) {
        $input = $request->getParsedBody();
        $data = $request->getAttribute('token');
        $response->withStatus(401);
-       $sql = "INSERT INTO `transaksi` (`id_transaksi`, `id_harga`, `tanggal`, `id_pegawai`) VALUES (NULL, :id_harga, now(), :id_pegawai);";
+       $sql = "INSERT INTO `transaksi` (`id_transaksi`, `id_harga`, `tanggal`, `id_pegawai`,`id_ticket`,`jumlah`) VALUES (NULL, :id_harga, now(), :id_pegawai, :id_ticket,:jumlah);";
+       $sql2 = "UPDATE `ticket` SET `status_ticket` = 'proses' WHERE `ticket`.`id_ticket` = :id_ticket ;";
        try
        { 
            $sth = $this->db->prepare($sql);
            $sth->bindParam("id_harga", $input['id_harga']);
-           $sth->bindParam("id_pegawai", $input['id_pegawai']);
+           $sth->bindParam("id_ticket", $input['id_ticket']);
+           $sth->bindParam("jumlah", $input['jumlah']);
+           $sth->bindParam("id_pegawai", $data['id']);
            $sth->execute();
+
+           $sth2 = $this->db->prepare($sql2);
+           $sth2->bindParam("id_ticket", $input['id_ticket']);
+           $sth2->execute();
            
            $settings = $this->get('settings'); // get settings array.
            return $this->response->withJson(['status'=>'berhasil','proses' => true]);
