@@ -65,6 +65,27 @@ $app->group('/m-harga', function(\Slim\App $app) {
        }
 
     });
+    $app->post('/ubah',function(Request $request, Response $response, array $args) {
+       $input = $request->getParsedBody();
+       $data = $request->getAttribute('token');
+       $response->withStatus(401);
+       $sql = "UPDATE `master_harga` SET `m_nama` = :m_nama,`m_harga` = :m_harga WHERE `master_harga`.`m_id_harga` = :id;";
+       try
+       { 
+           $sth = $this->db->prepare($sql);
+           $sth->bindParam("id", $input['id'], PDO::PARAM_INT);
+           $sth->bindParam("m_harga", $input['m_harga'], PDO::PARAM_INT);
+           $sth->bindParam("m_nama", $input['m_nama']);
+           $sth->execute();
+           $settings = $this->get('settings'); // get settings array.
+           return $this->response->withJson(['status'=>'berhasil','proses' => true]);
+       }
+       catch(PDOException $e)
+       {
+           return $this->response->withJson(['status'=>'gagal','proses' => false,'pesan' => $e->getMessage(),'input' => $input]);
+       }
+
+    });
     $app->post('/batal-hapus',function(Request $request, Response $response, array $args) {
        $input = $request->getParsedBody();
        $data = $request->getAttribute('token');

@@ -28,7 +28,7 @@ $app->post('/masuk', function (Request $request, Response $response, array $args
         $settings = $this->get('settings'); // get settings array.
         $token = JWT::encode($pengguna, $settings['jwt']['secret'], "HS256");
         //$this->reponse->withAddedHeader('Access-Control-Allow-Origin', '*');
-        return $this->response->withJson(['status'=>'berhasil','proses' => true,'token' => $token]);
+        return $this->response->withJson(['status'=>'berhasil','proses' => true,'token' => $token,'level'=> $pengguna->level]);
     }
     catch(PDOException $e)
     {
