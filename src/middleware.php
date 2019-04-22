@@ -4,6 +4,7 @@
 // e.g: $app->add(new \Slim\Csrf\Guard);
 $app->add(new \Tuupola\Middleware\JwtAuthentication([
     "path" => ["/transaksi","/pengguna","/ticket","/m-harga"], /* or ["/api", "/admin"] */
+    "secure" => false,
     "attribute" => "token",
     "secret" => "supersecretkeyyoushouldnoittogithub",
     "algorithm" => ["HS256"],

@@ -35,6 +35,12 @@ $app->post('/masuk', function (Request $request, Response $response, array $args
         return $this->response->withJson(['status'=>'gagal','pesan' => $e->getMessage()]);
     }
 });
+$app->post('/ping', function (Request $request, Response $response, array $args) {
+    $input = $request->getParsedBody();
+    
+    return $this->response->withJson(['status'=>'berhasil','proses' => true]);
+    //$reponse->withAddedHeader('Access-Control-Allow-Origin', '*');
+});
 
 $app->post('/daftar', function (Request $request, Response $response, array $args) {
     $input = $request->getParsedBody();
