@@ -80,7 +80,7 @@ $app->group('/ticket', function(\Slim\App $app) {
         $input = $request->getParsedBody();
         $data = $request->getAttribute('token');
         $response->withStatus(401);
-        $sql = "UPDATE `ticket` SET `pembayaran` = 'lunas' WHERE `ticket`.`id_ticket` = :id_ticket ;";
+        $sql = "UPDATE `ticket` SET `pembayaran` = 'lunas', tanggal_pembayaran=now() WHERE `ticket`.`id_ticket` = :id_ticket ;";
         try
         { 
             $sth = $this->db->prepare($sql);
@@ -98,7 +98,7 @@ $app->group('/ticket', function(\Slim\App $app) {
         $input = $request->getParsedBody();
         $data = $request->getAttribute('token');
         $response->withStatus(401);
-        $sql = "UPDATE `ticket` SET `pembayaran` = 'belum lunas' WHERE `ticket`.`id_ticket` = :id_ticket ;";
+        $sql = "UPDATE `ticket` SET `pembayaran` = 'belum lunas', tanggal_pembayaran=null WHERE `ticket`.`id_ticket` = :id_ticket ;";
         try
         { 
             $sth = $this->db->prepare($sql);

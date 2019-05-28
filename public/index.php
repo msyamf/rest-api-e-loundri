@@ -30,6 +30,7 @@ require __DIR__ . '/../src/routes/pengguna.php';
 require __DIR__ . '/../src/routes/master_harga.php';
 require __DIR__ . '/../src/routes/ticket.php';
 require __DIR__ . '/../src/routes/transaksi.php';
+require __DIR__ . '/../src/routes/home.php';
 
 // Run app
 $app->run();
