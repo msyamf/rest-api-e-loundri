@@ -76,6 +76,43 @@ $app->group('/ticket', function(\Slim\App $app) {
        }
 
     });
+    $app->post('/lunas',function(Request $request, Response $response, array $args) {
+        $input = $request->getParsedBody();
+        $data = $request->getAttribute('token');
+        $response->withStatus(401);
+        $sql = "UPDATE `ticket` SET `pembayaran` = 'lunas' WHERE `ticket`.`id_ticket` = :id_ticket ;";
+        try
+        { 
+            $sth = $this->db->prepare($sql);
+            $sth->bindParam("id_ticket", $input['id_ticket']);
+            $sth->execute();
+            $settings = $this->get('settings'); // get settings array.
+            return $this->response->withJson(['status'=>'berhasil','proses' => true]);
+        }
+        catch(PDOException $e)
+        {
+            return $this->response->withJson(['status'=>'gagal','proses' => false,'pesan' => $e->getMessage(),'input' => $input]);
+        }
+     });
+     $app->post('/belum-lunas',function(Request $request, Response $response, array $args) {
+        $input = $request->getParsedBody();
+        $data = $request->getAttribute('token');
+        $response->withStatus(401);
+        $sql = "UPDATE `ticket` SET `pembayaran` = 'belum lunas' WHERE `ticket`.`id_ticket` = :id_ticket ;";
+        try
+        { 
+            $sth = $this->db->prepare($sql);
+            $sth->bindParam("id_ticket", $input['id_ticket']);
+            $sth->execute();
+            $settings = $this->get('settings'); // get settings array.
+            return $this->response->withJson(['status'=>'berhasil','proses' => true]);
+        }
+        catch(PDOException $e)
+        {
+            return $this->response->withJson(['status'=>'gagal','proses' => false,'pesan' => $e->getMessage(),'input' => $input]);
+        }
+ 
+     });
     $app->post('/batal-hapus',function(Request $request, Response $response, array $args) {
        $input = $request->getParsedBody();
        $data = $request->getAttribute('token');

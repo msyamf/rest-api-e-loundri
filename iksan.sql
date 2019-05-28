@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.6.6deb5
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 22, 2019 at 10:02 AM
--- Server version: 10.1.38-MariaDB
--- PHP Version: 7.3.2
+-- Host: localhost:3306
+-- Generation Time: 28 Mei 2019 pada 03.09
+-- Versi Server: 10.1.29-MariaDB-6+b1
+-- PHP Version: 7.2.4-1+b1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -25,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `master_harga`
+-- Struktur dari tabel `master_harga`
 --
 
 CREATE TABLE `master_harga` (
@@ -36,17 +34,18 @@ CREATE TABLE `master_harga` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `master_harga`
+-- Dumping data untuk tabel `master_harga`
 --
 
 INSERT INTO `master_harga` (`m_id_harga`, `m_nama`, `m_harga`, `status`) VALUES
 (1, 'biasa', '1000', 'aktif'),
-(2, 'jens', '6000', 'nonaktif');
+(3, 'Jens', '5000', 'aktif'),
+(4, 'selimut ', '4500', 'aktif');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pengguna`
+-- Struktur dari tabel `pengguna`
 --
 
 CREATE TABLE `pengguna` (
@@ -63,7 +62,7 @@ CREATE TABLE `pengguna` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `pengguna`
+-- Dumping data untuk tabel `pengguna`
 --
 
 INSERT INTO `pengguna` (`id`, `nama_pengguna`, `password`, `nama`, `level`, `tanggal_mulai`, `tanggal_diperbarui`, `alamat`, `telfon`, `foto`) VALUES
@@ -78,31 +77,32 @@ INSERT INTO `pengguna` (`id`, `nama_pengguna`, `password`, `nama`, `level`, `tan
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ticket`
+-- Struktur dari tabel `ticket`
 --
 
 CREATE TABLE `ticket` (
+  `kode` int(100) NOT NULL,
   `id_ticket` varchar(100) NOT NULL,
   `id_pegawai` int(100) NOT NULL,
   `tanggal` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `nama_pelanggan` varchar(250) NOT NULL,
   `telp_pelangan` varchar(250) DEFAULT NULL,
   `alamat_pelanggan` text,
-  `status_ticket` varchar(50) NOT NULL
+  `status_ticket` varchar(50) NOT NULL,
+  `pembayaran` varchar(50) NOT NULL DEFAULT 'belum lunas'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `ticket`
+-- Dumping data untuk tabel `ticket`
 --
 
-INSERT INTO `ticket` (`id_ticket`, `id_pegawai`, `tanggal`, `nama_pelanggan`, `telp_pelangan`, `alamat_pelanggan`, `status_ticket`) VALUES
-('1f079c6a-85cf-4dd2-8bf2-41fc43b27c58', 12, '2019-04-21 20:38:11', 'ss', '999', '', 'baru'),
-('f9658a33-fef4-4571-a30e-8b09415c89dc', 12, '2019-04-21 18:47:32', 'tepo', '66', '', 'selesai');
+INSERT INTO `ticket` (`kode`, `id_ticket`, `id_pegawai`, `tanggal`, `nama_pelanggan`, `telp_pelangan`, `alamat_pelanggan`, `status_ticket`, `pembayaran`) VALUES
+(3, '4e83a8fc-9a10-4d8b-bec5-587e81cad281', 12, '2019-05-28 03:00:23', 'yudi', '09778666', 'jkjkj jlkjlkj ;olk', 'proses', 'belum lunas');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transaksi`
+-- Struktur dari tabel `transaksi`
 --
 
 CREATE TABLE `transaksi` (
@@ -115,11 +115,11 @@ CREATE TABLE `transaksi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `transaksi`
+-- Dumping data untuk tabel `transaksi`
 --
 
 INSERT INTO `transaksi` (`id_transaksi`, `id_harga`, `jumlah`, `tanggal`, `id_pegawai`, `id_ticket`) VALUES
-(34, 1, 1, '2019-04-21 18:47:07', 12, 'f9658a33-fef4-4571-a30e-8b09415c89dc');
+(36, 4, 1, '2019-05-26 12:03:23', 12, '4e83a8fc-9a10-4d8b-bec5-587e81cad281');
 
 --
 -- Indexes for dumped tables
@@ -142,7 +142,7 @@ ALTER TABLE `pengguna`
 -- Indexes for table `ticket`
 --
 ALTER TABLE `ticket`
-  ADD PRIMARY KEY (`id_ticket`);
+  ADD PRIMARY KEY (`kode`);
 
 --
 -- Indexes for table `transaksi`
@@ -158,21 +158,22 @@ ALTER TABLE `transaksi`
 -- AUTO_INCREMENT for table `master_harga`
 --
 ALTER TABLE `master_harga`
-  MODIFY `m_id_harga` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
+  MODIFY `m_id_harga` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
   MODIFY `id` int(100) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
+--
+-- AUTO_INCREMENT for table `ticket`
+--
+ALTER TABLE `ticket`
+  MODIFY `kode` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
-COMMIT;
-
+  MODIFY `id_transaksi` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

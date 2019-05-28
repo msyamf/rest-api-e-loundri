@@ -20,7 +20,7 @@ return [
             "host" => "localhost",             
             "dbname" => "iksan",             
             "user" => "root",            
-            "pass" => ""        
+            "pass" => "msf"        
         ],
 
         "jwt" => [
