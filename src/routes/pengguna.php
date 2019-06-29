@@ -140,6 +140,24 @@ $app->group('/pengguna', function(\Slim\App $app) {
         }
     });
 
+    $app->post('/hapus', function (Request $request, Response $response, array $args) {
+        $input = $request->getParsedBody();
+        $sql = "DELETE FROM `pengguna` WHERE `pengguna`.`id` = :id;";
+        try
+        { 
+            $pwd = password_hash($input['password'],PASSWORD_DEFAULT);
+            $sth = $this->db->prepare($sql);
+            $sth->bindParam("id",$input['id']);
+            $sth->execute();
+            $settings = $this->get('settings'); // get settings array.
+            return $this->response->withJson(['status'=>'berhasil','proses' => true]);
+        }
+        catch(PDOException $e)
+        {
+            return $this->response->withJson(['status'=>'gagal','proses' => false,'pesan' => $e->getMessage(),'input' => $input]);
+        }
+    });
+
 
     $app->post('/list',function(Request $request, Response $response, array $args) {
         $data = $request->getAttribute('token');
