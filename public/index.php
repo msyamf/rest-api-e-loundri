@@ -27,6 +27,7 @@ require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/routes.php';
 
 require __DIR__ . '/../src/routes/pengguna.php';
+require __DIR__ . '/../src/routes/pendapatan.php';
 require __DIR__ . '/../src/routes/master_harga.php';
 require __DIR__ . '/../src/routes/ticket.php';
 require __DIR__ . '/../src/routes/transaksi.php';

@@ -3,7 +3,7 @@
 
 // e.g: $app->add(new \Slim\Csrf\Guard);
 $app->add(new \Tuupola\Middleware\JwtAuthentication([
-    "path" => ["/transaksi","/pengguna","/ticket","/m-harga","/home"], /* or ["/api", "/admin"] */
+    "path" => ["/transaksi","/pengguna","/ticket","/m-harga","/home","/pendapatan"], /* or ["/api", "/admin"] */
     "secure" => false,
     "attribute" => "token",
     "secret" => "supersecretkeyyoushouldnoittogithub",

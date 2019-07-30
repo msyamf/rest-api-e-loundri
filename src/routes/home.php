@@ -12,7 +12,7 @@ $app->group('/home', function(\Slim\App $app) {
         $input = $request->getParsedBody();
         $data = $request->getAttribute('token');
         $str = '';
-        $response->withStatus(401);
+        //$response->withStatus(401);
         if ($input['pembayaran'] == 'lunas'){
             $str = "AND ticket.tanggal_pembayaran = :tanggal_pembayaran";
         }
@@ -26,11 +26,21 @@ $app->group('/home', function(\Slim\App $app) {
             $sth->execute();
             $list = $sth->fetchAll();
             $settings = $this->get('settings'); // get settings array.
-            return $this->response->withJson(['status'=>'berhasil','proses' => true,'data' => $list,'sql'=>$sql]);
+            return $this->response->withJson([
+                'status'=>'berhasil',
+                'proses' => true,
+                'data' => $list,
+                //'sql'=>$sql
+                ]);
         }
         catch(PDOException $e)
         {
-            return $this->response->withJson(['status'=>'gagal','proses' => false,'pesan' => $e->getMessage(),'sql'=>$sql,'input' => $input]);
+            return $this->response->withJson([
+                'status'=>'gagal',
+                'proses' => false,
+                'pesan' => $e->getMessage(),
+                'sql'=>$sql,'input' => $input
+                ]);
         }
  
      });
